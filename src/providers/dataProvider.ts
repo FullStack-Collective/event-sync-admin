@@ -1,18 +1,16 @@
-import { DataProvider, fetchUtils } from 'react-admin';
-import { stringify } from 'query-string';
+import { fetchUtils } from 'react-admin';
+import type { DataProvider } from 'react-admin';
+import qs from 'query-string';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const httpClient = (url: string, options: fetchUtils.Options = {}) => {
   const token = localStorage.getItem('admin_token');
-
-  options.headers = new Headers(options.headers);
+  options.headers = new Headers(options.headers as HeadersInit);
   options.headers.set('Content-Type', 'application/json');
-
   if (token) {
     options.headers.set('Authorization', `Bearer ${token}`);
   }
-
   return fetchUtils.fetchJson(url, options);
 };
 
@@ -23,46 +21,36 @@ const buildQuery = (params: {
 }) => {
   const { pagination, sort, filter } = params;
   const query: Record<string, unknown> = {};
-
   if (pagination) {
     query.page = pagination.page;
     query.limit = pagination.perPage;
   }
-
   if (sort) {
     query.sortBy = sort.field;
     query.sortOrder = sort.order.toLowerCase();
   }
-
   if (filter) {
     if (filter.q) query.search = filter.q;
     if (filter.title) query.search = filter.title;
     if (filter.name) query.search = filter.name;
     if (filter.status) query.status = filter.status;
   }
-
   return query;
 };
 
 export const dataProvider: DataProvider = {
   getList: async (resource, params) => {
     const query = buildQuery(params);
-    const queryString = stringify(query);
+    const queryString = qs.stringify(query);
     const url = `${API_URL}/api/${resource}${queryString ? `?${queryString}` : ''}`;
-
     const response = await httpClient(url);
-
     const data = response.json.data || response.json;
     const total =
       response.json.total ||
       response.json.pagination?.total ||
       (Array.isArray(data) ? data.length : 0);
-
     return {
-      data: (Array.isArray(data) ? data : []).map((item: { id: number }) => ({
-        ...item,
-        id: item.id,
-      })),
+      data: (Array.isArray(data) ? data : []) as any[],
       total,
     };
   },
@@ -70,10 +58,8 @@ export const dataProvider: DataProvider = {
   getOne: async (resource, params) => {
     const url = `${API_URL}/api/${resource}/${params.id}`;
     const response = await httpClient(url);
-
     const data = response.json.data || response.json;
-
-    return { data: { ...data, id: data.id } };
+    return { data: data as any };
   },
 
   create: async (resource, params) => {
@@ -82,9 +68,8 @@ export const dataProvider: DataProvider = {
       method: 'POST',
       body: JSON.stringify(params.data),
     });
-
     const data = response.json.data || response.json;
-    return { data: { ...data, id: data.id } };
+    return { data: data as any };
   },
 
   update: async (resource, params) => {
@@ -93,34 +78,29 @@ export const dataProvider: DataProvider = {
       method: 'PUT',
       body: JSON.stringify(params.data),
     });
-
     const data = response.json.data || response.json;
-    return { data: { ...data, id: data.id } };
+    return { data: data as any };
   },
 
   delete: async (resource, params) => {
     const url = `${API_URL}/api/${resource}/${params.id}`;
     await httpClient(url, { method: 'DELETE' });
-    return { data: { id: params.id } } as { data: { id: number } };
+    return { data: { id: params.id } as any };
   },
 
   getMany: async (resource, params) => {
-    const queryString = stringify({ id: params.ids });
+    const queryString = qs.stringify({ id: params.ids });
     const url = `${API_URL}/api/${resource}?${queryString}`;
     const response = await httpClient(url);
     const data = response.json.data || response.json;
     return {
-      data: (Array.isArray(data) ? data : []).map((item: { id: number }) => ({
-        ...item,
-        id: item.id,
-      })),
+      data: (Array.isArray(data) ? data : []) as any[],
     };
   },
 
   getManyReference: async (resource, params) => {
     const { target, id, pagination, sort } = params;
     const query: Record<string, unknown> = { [target]: id };
-
     if (pagination) {
       query.page = pagination.page;
       query.limit = pagination.perPage;
@@ -129,17 +109,12 @@ export const dataProvider: DataProvider = {
       query.sortBy = sort.field;
       query.sortOrder = sort.order.toLowerCase();
     }
-
-    const queryString = stringify(query);
+    const queryString = qs.stringify(query);
     const url = `${API_URL}/api/${resource}?${queryString}`;
     const response = await httpClient(url);
     const data = response.json.data || response.json;
-
     return {
-      data: (Array.isArray(data) ? data : []).map((item: { id: number }) => ({
-        ...item,
-        id: item.id,
-      })),
+      data: (Array.isArray(data) ? data : []) as any[],
       total: response.json.total || (Array.isArray(data) ? data.length : 0),
     };
   },
