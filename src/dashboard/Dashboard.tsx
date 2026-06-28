@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDashboardStats } from './useDashboardStats';
 import { StatCard } from './StatCard';
 import { EventsTimeline } from './EventsTimeline';
@@ -114,7 +115,4 @@ export const Dashboard = () => {
       )}
     </div>
   );
-};
-
-// import manquant à ajouter en haut
-import { useState } from 'react';
+}
