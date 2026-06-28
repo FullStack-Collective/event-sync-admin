@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLogout, useGetIdentity, useRefresh } from 'react-admin';
 import './sidebar.css';
@@ -97,46 +97,65 @@ export const CustomMenu = () => {
   const logout  = useLogout();
   const refresh = useRefresh();
   const { data: identity } = useGetIdentity();
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const width = collapsed ? '68px' : '240px';
+    document.documentElement.style.setProperty('--sidebar-width', width);
+    const content = document.getElementById('main-content');
+    if (content) {
+      (content as HTMLElement).style.marginLeft = width;
+    }
+  }, [collapsed]);
 
   const isActive = (to: string) => {
     if (to === '/') return location.pathname === '/';
     return location.pathname.startsWith(to);
   };
 
-  const handleRefresh = async () => {
+  const handleRefresh = () => {
     setRefreshing(true);
     refresh();
     setTimeout(() => setRefreshing(false), 800);
   };
 
-  const initials = (identity?.fullName as string | undefined)
-    ?.split(' ')
-    .map(n => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2) ?? 'A';
+  const initials =
+    (identity?.fullName as string | undefined)
+      ?.split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2) ?? 'A';
 
   return (
     <nav className={`custom-sidebar ${collapsed ? 'collapsed' : ''}`}>
 
       {/* ── Logo ── */}
-      <a className="sidebar-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-        <img src="/Logo.png" alt="EventSync" />
+      <div className="sidebar-logo" onClick={() => navigate('/')}>
+        <img src="/logo.png" alt="EventSync" className="sidebar-logo-img" />
+        {/* Collapse button — shown when expanded */}
         <button
           className="sidebar-toggle"
-          onClick={e => { e.preventDefault(); e.stopPropagation(); setCollapsed(c => !c); }}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          onClick={e => { e.stopPropagation(); setCollapsed(true); }}
+          title="Collapse sidebar"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-            {collapsed
-              ? <polyline points="9 18 15 12 9 6" />
-              : <polyline points="15 18 9 12 15 6" />
-            }
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-      </a>
+      </div>
+
+      {/* ── Expand button — shown only when collapsed ── */}
+      <button
+        className="sidebar-expand-btn"
+        onClick={() => setCollapsed(false)}
+        title="Expand sidebar"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
 
       {/* ── Navigation ── */}
       <div className="sidebar-nav">
@@ -162,8 +181,6 @@ export const CustomMenu = () => {
 
       {/* ── Footer ── */}
       <div className="sidebar-footer">
-
-        {/* User row */}
         <div className="sidebar-user">
           <div className="sidebar-user-avatar">{initials}</div>
           <span className="sidebar-user-name">
@@ -171,7 +188,6 @@ export const CustomMenu = () => {
           </span>
         </div>
 
-        {/* Actions */}
         <div className="sidebar-footer-actions">
           <button
             className={`footer-btn refresh ${refreshing ? 'spinning' : ''}`}
