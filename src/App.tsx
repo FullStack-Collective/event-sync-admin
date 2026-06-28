@@ -7,6 +7,7 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 import { authProvider } from './providers/authProvider';
 import { dataProvider } from './providers/dataProvider';
+import { LoginPage } from './login';
 
 import { EventList, EventEdit, EventCreate } from './resources/events';
 import { RoomList, RoomEdit, RoomCreate } from './resources/rooms';
@@ -15,7 +16,11 @@ import { SpeakerList, SpeakerEdit, SpeakerCreate } from './resources/speakers';
 import { QuestionList } from './resources/questions';
 
 const App = () => (
-  <Admin dataProvider={dataProvider} authProvider={authProvider}>
+  <Admin
+    dataProvider={dataProvider}
+    authProvider={authProvider}
+    loginPage={LoginPage}
+  >
     <Resource
       name="events"
       list={EventList}
