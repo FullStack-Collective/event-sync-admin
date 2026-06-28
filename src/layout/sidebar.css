@@ -68,13 +68,14 @@
    SIDEBAR COLLAPSED STATE
    ============================================= */
 .custom-sidebar.collapsed {
-  width: 60px;
+  width: 150px;
 }
 
 .custom-sidebar.collapsed .sidebar-logo-text,
 .custom-sidebar.collapsed .menu-item-label,
 .custom-sidebar.collapsed .sidebar-section-label,
-.custom-sidebar.collapsed .footer-label {
+.custom-sidebar.collapsed .footer-label,
+.custom-sidebar.collapsed .sidebar-user-name {
   opacity: 0;
   width: 0;
   overflow: hidden;
@@ -108,18 +109,17 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 1.25rem 1rem 1rem;
+  padding: 0rem 1rem 1rem;
   text-decoration: none;
   border-bottom: 1px solid var(--border-light);
-  margin-bottom: 0.5rem;
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
 
 .sidebar-logo img {
-  width: 32px;
-  height: 32px;
+  width: 100px;
+  height: 50px;
   object-fit: contain;
   flex-shrink: 0;
   filter: drop-shadow(0 0 8px rgba(82, 183, 136, 0.3));
