@@ -25,14 +25,14 @@
   --gradient-past:  linear-gradient(135deg, #2a3f3a 0%, #538f71 100%);
 
   /* Fill the viewport exactly — no page scroll */
-  height: 100vh;
+  height: 96vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background-color: var(--forest);
   color: var(--text);
   font-family: 'Inter', system-ui, sans-serif;
-  padding: 1.25rem 1.5rem 1rem;
+  padding: 0rem 1.5rem 0rem;
   box-sizing: border-box;
   gap: 0.875rem;
 }
