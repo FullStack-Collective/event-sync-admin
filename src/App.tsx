@@ -8,6 +8,7 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import { authProvider } from './providers/authProvider';
 import { dataProvider } from './providers/dataProvider';
 import { LoginPage } from './login';
+import { Dashboard } from './dashboard';
 
 import { EventList, EventEdit, EventCreate } from './resources/events';
 import { RoomList, RoomEdit, RoomCreate } from './resources/rooms';
@@ -20,45 +21,13 @@ const App = () => (
     dataProvider={dataProvider}
     authProvider={authProvider}
     loginPage={LoginPage}
+    dashboard={Dashboard}
   >
-    <Resource
-      name="events"
-      list={EventList}
-      edit={EventEdit}
-      create={EventCreate}
-      recordRepresentation="title"
-      icon={CalendarMonthIcon}
-    />
-    <Resource
-      name="rooms"
-      list={RoomList}
-      edit={RoomEdit}
-      create={RoomCreate}
-      recordRepresentation="name"
-      icon={MeetingRoomIcon}
-    />
-    <Resource
-      name="sessions"
-      list={SessionList}
-      edit={SessionEdit}
-      create={SessionCreate}
-      recordRepresentation="title"
-      icon={PodcastsIcon}
-    />
-    <Resource
-      name="speakers"
-      list={SpeakerList}
-      edit={SpeakerEdit}
-      create={SpeakerCreate}
-      recordRepresentation="name"
-      icon={RecordVoiceOverIcon}
-    />
-    <Resource
-      name="questions"
-      list={QuestionList}
-      recordRepresentation="content"
-      icon={QuestionAnswerIcon}
-    />
+    <Resource name="events"   list={EventList}   edit={EventEdit}   create={EventCreate}   recordRepresentation="title"   icon={CalendarMonthIcon} />
+    <Resource name="rooms"    list={RoomList}    edit={RoomEdit}    create={RoomCreate}    recordRepresentation="name"    icon={MeetingRoomIcon} />
+    <Resource name="sessions" list={SessionList} edit={SessionEdit} create={SessionCreate} recordRepresentation="title"   icon={PodcastsIcon} />
+    <Resource name="speakers" list={SpeakerList} edit={SpeakerEdit} create={SpeakerCreate} recordRepresentation="name"   icon={RecordVoiceOverIcon} />
+    <Resource name="questions" list={QuestionList} recordRepresentation="content" icon={QuestionAnswerIcon} />
   </Admin>
 );
 
