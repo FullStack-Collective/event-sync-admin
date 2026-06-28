@@ -123,8 +123,7 @@ export const CustomMenu = () => {
 
       {/* ── Logo ── */}
       <a className="sidebar-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-        <img src="/logo.png" alt="EventSync" />
-        <span className="sidebar-logo-text">EventSync</span>
+        <img src="/Logo.png" alt="EventSync" />
         <button
           className="sidebar-toggle"
           onClick={e => { e.preventDefault(); e.stopPropagation(); setCollapsed(c => !c); }}
