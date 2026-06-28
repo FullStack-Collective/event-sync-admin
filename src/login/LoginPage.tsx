@@ -49,7 +49,7 @@ export const LoginPage = ({ redirectTo }: LoginFormProps) => {
 
         {/* Header */}
         <div className="login-header">
-          <img src="/logo.png" alt="EventSync" className="login-logo" />
+          <img src="/Logo.png" alt="EventSync" className="login-logo" />
 
           <div className="login-badge">
             <span className="login-badge-dot" />
