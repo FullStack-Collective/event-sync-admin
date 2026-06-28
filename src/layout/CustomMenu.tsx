@@ -133,7 +133,7 @@ export const CustomMenu = () => {
 
       {/* ── Logo ── */}
       <div className="sidebar-logo" onClick={() => navigate('/')}>
-        <img src="/logo.png" alt="EventSync" className="sidebar-logo-img" />
+        <img src="/Logo.png" alt="EventSync" className="sidebar-logo-img" />
         {/* Collapse button — shown when expanded */}
         <button
           className="sidebar-toggle"
