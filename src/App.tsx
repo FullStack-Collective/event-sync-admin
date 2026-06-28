@@ -15,6 +15,7 @@ import { RoomList, RoomEdit, RoomCreate } from './resources/rooms';
 import { SessionList, SessionEdit, SessionCreate } from './resources/sessions';
 import { SpeakerList, SpeakerEdit, SpeakerCreate } from './resources/speakers';
 import { QuestionList } from './resources/questions';
+import { CustomLayout } from './layout';
 
 const App = () => (
   <Admin
@@ -22,6 +23,7 @@ const App = () => (
     authProvider={authProvider}
     loginPage={LoginPage}
     dashboard={Dashboard}
+    layout={CustomLayout}
   >
     <Resource name="events"   list={EventList}   edit={EventEdit}   create={EventCreate}   recordRepresentation="title"   icon={CalendarMonthIcon} />
     <Resource name="rooms"    list={RoomList}    edit={RoomEdit}    create={RoomCreate}    recordRepresentation="name"    icon={MeetingRoomIcon} />
