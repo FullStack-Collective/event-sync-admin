@@ -3,7 +3,8 @@ import {
   useNotify, 
   useRefresh,
   useGetList,
-  useRecordContext
+  useRecordContext,
+  fetchUtils
 } from 'react-admin';
 import { 
   Dialog, 
@@ -17,6 +18,19 @@ import {
   InputLabel,
 } from '@mui/material';
 import { useState, MouseEvent } from 'react';
+
+const API_BASE = (import.meta.env.VITE_API_URL as string)?.replace(/\/$/, '') ?? 'http://localhost:5000';
+
+// Même httpClient que le dataProvider — gère admin_token automatiquement
+const httpClient = (url: string, options: fetchUtils.Options = {}) => {
+  const token = localStorage.getItem('admin_token');
+  options.headers = new Headers(options.headers as HeadersInit);
+  options.headers.set('Content-Type', 'application/json');
+  if (token) {
+    options.headers.set('Authorization', `Bearer ${token}`);
+  }
+  return fetchUtils.fetchJson(url, options);
+};
 
 export const AddSpeakerToSession = () => {
   const [open, setOpen] = useState(false);
@@ -35,7 +49,7 @@ export const AddSpeakerToSession = () => {
     e.preventDefault();
     setOpen(true);
   };
-  
+
   const handleClose = (e?: MouseEvent) => {
     if (e) {
       e.stopPropagation();
@@ -54,7 +68,6 @@ export const AddSpeakerToSession = () => {
       notify('Please select a session', { type: 'warning' });
       return;
     }
-
     if (!record) {
       notify('No speaker selected', { type: 'error' });
       return;
@@ -63,29 +76,15 @@ export const AddSpeakerToSession = () => {
     setLoading(true);
 
     try {
-      const API_BASE = (import.meta.env.VITE_API_URL as string)?.replace(/\/$/, '') ?? 'http://localhost:5000';
       const url = `${API_BASE}/api/speakers/${record.id}/sessions/${selectedSession}`;
-
-const token = localStorage.getItem('admin_token');
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error((errorData as any).error || `HTTP error ${response.status}`);
-      }
+      await httpClient(url, { method: 'POST' });
 
       notify(`Session added to "${record.name}" successfully!`, { type: 'success' });
       handleClose();
       refresh();
     } catch (error: any) {
-      notify(`Error: ${error.message || 'Failed to add session'}`, { type: 'error' });
+      const message = error?.body?.error || error?.message || 'Failed to add session';
+      notify(`Error: ${message}`, { type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -93,19 +92,16 @@ const token = localStorage.getItem('admin_token');
 
   return (
     <>
-      <Button 
-        label="Add Session" 
+      <Button
+        label="Add Session"
         onClick={handleOpen}
-        sx={{ 
-          fontSize: '0.75rem', 
-          minWidth: '100px'
-        }}
+        sx={{ fontSize: '0.75rem', minWidth: '100px' }}
       />
-      
-      <Dialog 
-        open={open} 
-        onClose={handleClose} 
-        maxWidth="sm" 
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="sm"
         fullWidth
         onClick={(e) => e.stopPropagation()}
       >
@@ -133,10 +129,12 @@ const token = localStorage.getItem('admin_token');
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <MuiButton onClick={handleClose} disabled={loading}>Cancel</MuiButton>
-          <MuiButton 
-            onClick={handleAdd} 
-            variant="contained" 
+          <MuiButton onClick={handleClose} disabled={loading}>
+            Cancel
+          </MuiButton>
+          <MuiButton
+            onClick={handleAdd}
+            variant="contained"
             color="primary"
             disabled={loading || !selectedSession}
           >
