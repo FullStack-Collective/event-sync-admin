@@ -4,6 +4,7 @@ import {
   FilterButton, TopToolbar, CreateButton, ExportButton,
 } from 'react-admin';
 import { PageHeader } from '../../components/PageHeader';
+import { AddSpeakerToSession } from './AddSpeakerToSession';
 
 const Icon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -40,7 +41,10 @@ export const SpeakerList = () => (
         <UrlField source="linkedin" label="LinkedIn" />
         <EditButton />
         <DeleteButton />
-      </Datagrid>
+         <div onClick={(e) => e.stopPropagation()}>
+          <AddSpeakerToSession />
+        </div>
+        </Datagrid>
     </List>
   </>
 );
